@@ -38,9 +38,8 @@
       padding: 1.8rem 2rem 2.2rem;
       color: #f0e9e1;
     }
-    /* 右侧里程碑面板 */
     .milestone-panel {
-      width: 240px;
+      width: 220px;
       flex-shrink: 0;
       background: rgba(10, 12, 20, 0.75);
       backdrop-filter: blur(20px);
@@ -48,7 +47,7 @@
       border-radius: 2rem;
       box-shadow: 0 35px 55px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.1);
       border: 1px solid rgba(255, 215, 140, 0.25);
-      padding: 1.4rem 1.2rem;
+      padding: 1.4rem 1rem;
       color: #f0e9e1;
       position: sticky;
       top: 1.5rem;
@@ -56,11 +55,11 @@
     .milestone-title {
       text-align: center;
       font-weight: 600;
-      font-size: 1rem;
+      font-size: 0.95rem;
       color: #ffd966;
-      margin-bottom: 1rem;
+      margin-bottom: 0.8rem;
       border-bottom: 1px solid rgba(255,215,150,0.3);
-      padding-bottom: 0.6rem;
+      padding-bottom: 0.5rem;
       letter-spacing: 0.05rem;
     }
     .milestone-list {
@@ -71,27 +70,43 @@
     .milestone-item {
       background: rgba(255,255,255,0.05);
       border-radius: 0.8rem;
-      padding: 0.5rem 0.7rem;
-      margin-bottom: 0.4rem;
+      padding: 0.5rem 0.6rem;
+      margin-bottom: 0.35rem;
       border-left: 3px solid #f7b32b;
       display: flex;
       justify-content: space-between;
+      align-items: center;
     }
     .milestone-item.backstab {
       border-left-color: #ff6b6b;
     }
+    .milestone-round {
+      color: #9aa9c0;
+      font-size: 0.7rem;
+      min-width: 28px;
+    }
     .milestone-count {
       color: #f7b32b;
       font-weight: 700;
+      font-size: 0.85rem;
     }
     .milestone-pulls {
       color: #e6d7b4;
+      font-weight: 600;
     }
     .milestone-empty {
       text-align: center;
       color: #5b5b5b;
       font-size: 0.75rem;
       padding: 1rem 0;
+    }
+    .current-round-info {
+      text-align: center;
+      font-size: 0.7rem;
+      color: #8a8a7a;
+      margin-top: 0.8rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 0.6rem;
     }
 
     h1 {
@@ -349,11 +364,14 @@
       </div>
     </div>
 
-    <!-- 右侧：7限定里程碑面板 -->
+    <!-- 右侧：每轮记录面板 -->
     <div class="milestone-panel" id="milestonePanel">
-      <div class="milestone-title">🎯 限定里程碑</div>
+      <div class="milestone-title">📋 每轮限定记录</div>
       <div class="milestone-list" id="milestoneList">
-        <div class="milestone-empty">尚未达成7限定</div>
+        <div class="milestone-empty">尚未完成一轮</div>
+      </div>
+      <div class="current-round-info" id="currentRoundInfo">
+        当前轮: 0限定 / 0抽
       </div>
     </div>
   </div>
@@ -383,11 +401,12 @@
       let loseCount = 0;
       let historyLogs = [];
 
-      // 里程碑追踪
-      let lastMilestoneLimitedCount = 0;  // 上次记录时的限定总数
-      let milestoneRecords = [];           // [{ limitedCount, totalPulls, isBackstab }]
+      // 每轮追踪
+      let roundLimitedCount = 0;      // 当前轮累计限定数
+      let roundStartPulls = 0;        // 当前轮开始时的总抽数
+      let roundRecords = [];          // [{ limitedCount, pullsUsed, isBackstab }]
 
-      // DOM - 主面板
+      // DOM
       const pityCounterEl = document.getElementById('pityCounter');
       const currentRateEl = document.getElementById('currentRate');
       const guaranteeStatusEl = document.getElementById('guaranteeStatus');
@@ -401,6 +420,7 @@
       const avgLimitedPullsEl = document.getElementById('avgLimitedPulls');
       const historyContainer = document.getElementById('historyContainer');
       const milestoneListEl = document.getElementById('milestoneList');
+      const currentRoundInfoEl = document.getElementById('currentRoundInfo');
 
       function formatRate(r) { return (r*100).toFixed(2)+'%'; }
       
@@ -414,56 +434,51 @@
         return BASE_RATE;
       }
 
-      function checkMilestone() {
-        // 检查是否跨越了7的倍数
-        const prevMilestone = lastMilestoneLimitedCount;
-        const currentMilestone = countLimited;
-        
-        // 找出所有跨过的7的倍数
-        for (let m = prevMilestone + 1; m <= currentMilestone; m++) {
-          if (m % 7 === 0) {
-            // 达成 m 限定里程碑
-            const isBackstab = m > (Math.floor(prevMilestone / 7) + 1) * 7;
-            // 如果是背刺：说明一次操作跨过了多个7的倍数
-            // 例如 prevMilestone=6, m=14 (跨越7), m=14时 isBackstab=true for 14
-            // 更简单的判断：m !== prevMilestone + 1 且 m % 7 === 0 且 prevMilestone%7 !== 6
-            // 实际上：如果prevMilestone=6，达成7是正常，达成14是背刺
-            let backstab = false;
-            const expectedNext = (Math.floor(prevMilestone / 7) + 1) * 7;
-            if (m > expectedNext) {
-              backstab = true;
-            }
-            
-            milestoneRecords.push({
-              limitedCount: m,
-              totalPulls: totalPulls,
-              isBackstab: backstab
-            });
-          }
+      function checkRoundComplete() {
+        // 检查当前轮是否达到或超过7限定
+        if (roundLimitedCount >= 7) {
+          const pullsUsed = totalPulls - roundStartPulls;
+          const isBackstab = roundLimitedCount > 7;
+          
+          roundRecords.push({
+            limitedCount: roundLimitedCount,
+            pullsUsed: pullsUsed,
+            isBackstab: isBackstab
+          });
+          
+          // 重置新一轮
+          roundLimitedCount = 0;
+          roundStartPulls = totalPulls;
+          
+          renderRoundRecords();
+          updateCurrentRoundInfo();
         }
-        
-        lastMilestoneLimitedCount = currentMilestone;
-        renderMilestones();
       }
 
-      function renderMilestones() {
-        if (milestoneRecords.length === 0) {
-          milestoneListEl.innerHTML = '<div class="milestone-empty">尚未达成7限定</div>';
+      function renderRoundRecords() {
+        if (roundRecords.length === 0) {
+          milestoneListEl.innerHTML = '<div class="milestone-empty">尚未完成一轮</div>';
           return;
         }
         let html = '';
-        milestoneRecords.forEach(rec => {
+        roundRecords.forEach((rec, index) => {
           const backstabClass = rec.isBackstab ? ' backstab' : '';
-          const marker = rec.isBackstab ? '⚡' : '🎯';
+          const marker = rec.isBackstab ? '⚡' : '';
           html += `
             <div class="milestone-item${backstabClass}">
-              <span class="milestone-count">${marker} ${rec.limitedCount}限定</span>
-              <span class="milestone-pulls">${rec.totalPulls}抽</span>
+              <span class="milestone-round">#${index + 1}</span>
+              <span class="milestone-count">${marker}${rec.limitedCount}限定</span>
+              <span class="milestone-pulls">${rec.pullsUsed}抽</span>
             </div>
           `;
         });
         milestoneListEl.innerHTML = html;
         milestoneListEl.scrollTop = milestoneListEl.scrollHeight;
+      }
+
+      function updateCurrentRoundInfo() {
+        const pullsSoFar = totalPulls - roundStartPulls;
+        currentRoundInfoEl.textContent = `当前轮: ${roundLimitedCount}限定 / ${pullsSoFar}抽`;
       }
 
       function performSinglePull() {
@@ -492,6 +507,7 @@
           if (isLimited) {
             countLimited++;
             winCount++;
+            roundLimitedCount++;
             const pullsSinceLastLimited = totalPulls - lastLimitedTotalPulls + 1;
             limitedPullRecords.push(pullsSinceLastLimited);
             lastLimitedTotalPulls = totalPulls + 1;
@@ -590,8 +606,9 @@
       function executeSinglePull() {
         const res = performSinglePull();
         addHistoryLog(res.stars, res.pityBeforePull, res.rateAtPull, res.isLimited, res.isStandard);
-        checkMilestone();
+        checkRoundComplete();
         updateUI();
+        updateCurrentRoundInfo();
         renderHistory();
       }
 
@@ -600,8 +617,9 @@
           const res = performSinglePull();
           addHistoryLog(res.stars, res.pityBeforePull, res.rateAtPull, res.isLimited, res.isStandard);
         }
-        checkMilestone();
+        checkRoundComplete();
         updateUI();
+        updateCurrentRoundInfo();
         renderHistory();
       }
 
@@ -619,11 +637,13 @@
         winCount = 0;
         loseCount = 0;
         historyLogs = [];
-        lastMilestoneLimitedCount = 0;
-        milestoneRecords = [];
+        roundLimitedCount = 0;
+        roundStartPulls = 0;
+        roundRecords = [];
         updateUI();
         renderHistory();
-        renderMilestones();
+        renderRoundRecords();
+        updateCurrentRoundInfo();
       }
 
       document.getElementById('pullOneBtn').addEventListener('click', executeSinglePull);
@@ -638,7 +658,8 @@
 
       updateUI();
       renderHistory();
-      renderMilestones();
+      renderRoundRecords();
+      updateCurrentRoundInfo();
     })();
   </script>
 </body>
