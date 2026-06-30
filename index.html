@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=1.5">
-  <title>米式卡池模拟器 · 概率递增 · 金紫统计</title>
+  <title>米式卡池 · 大小保底 · 限定统计</title>
   <style>
     * {
       margin: 0;
@@ -12,7 +12,7 @@
     }
     body {
       background: linear-gradient(145deg, #1a1e2b 0%, #2a2f3f 100%);
-      font-family: 'Segoe UI', 'Roboto', 'Noto Sans', system-ui, -apple-system, sans-serif;
+      font-family: 'Segoe UI', 'Roboto', 'Noto Sans', system-ui, sans-serif;
       min-height: 100vh;
       display: flex;
       justify-content: center;
@@ -21,7 +21,7 @@
       margin: 0;
     }
     .card {
-      max-width: 750px;
+      max-width: 780px;
       width: 100%;
       background: rgba(255, 255, 255, 0.07);
       backdrop-filter: blur(20px);
@@ -29,12 +29,12 @@
       border-radius: 2.8rem;
       box-shadow: 0 35px 55px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.15);
       border: 1px solid rgba(255, 215, 140, 0.2);
-      padding: 2rem 2.2rem 2.5rem;
+      padding: 1.8rem 2rem 2.2rem;
       color: #f0e9e1;
     }
     h1 {
       font-weight: 500;
-      font-size: 2.3rem;
+      font-size: 2.2rem;
       letter-spacing: 2px;
       text-align: center;
       margin-bottom: 0.2rem;
@@ -42,26 +42,24 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      filter: drop-shadow(0 4px 8px #00000050);
     }
     .subtitle {
       text-align: center;
       color: #b9af9a;
-      margin-bottom: 1.8rem;
-      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
       font-weight: 300;
-      letter-spacing: 0.5px;
       border-bottom: 1px dashed rgba(255, 215, 150, 0.35);
-      padding-bottom: 0.8rem;
+      padding-bottom: 0.7rem;
     }
     .stats-grid {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
-      margin-bottom: 1.8rem;
+      margin-bottom: 1.5rem;
       background: rgba(10, 12, 20, 0.55);
       border-radius: 2rem;
-      padding: 1.4rem 1.8rem;
+      padding: 1.2rem 1.6rem;
       backdrop-filter: blur(14px);
       border: 1px solid rgba(230, 200, 140, 0.25);
       align-items: center;
@@ -69,7 +67,7 @@
     }
     .pity-area {
       display: flex;
-      gap: 2rem;
+      gap: 1.8rem;
       flex-wrap: wrap;
     }
     .pity-item {
@@ -78,69 +76,82 @@
       align-items: center;
     }
     .pity-label {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       text-transform: uppercase;
       color: #c0b39b;
-      letter-spacing: 0.1rem;
+      letter-spacing: 0.08rem;
     }
     .pity-value {
-      font-size: 2.1rem;
+      font-size: 2rem;
       font-weight: 600;
       color: #fadf9e;
       line-height: 1.2;
     }
+    .guarantee-badge {
+      background: #b38b40;
+      color: #0a0a0a;
+      font-weight: bold;
+      padding: 0.2rem 0.8rem;
+      border-radius: 1rem;
+      font-size: 0.75rem;
+      margin-left: 0.3rem;
+    }
     .count-badges {
       display: flex;
-      gap: 1.2rem;
+      gap: 1rem;
       background: #211d16;
-      padding: 0.5rem 1.4rem;
+      padding: 0.5rem 1.3rem;
       border-radius: 2.5rem;
       border: 1px solid #b49450;
       align-items: center;
+      flex-wrap: wrap;
     }
     .badge-item {
       display: flex;
       align-items: center;
-      gap: 0.3rem;
+      gap: 0.25rem;
       font-weight: 600;
+      font-size: 0.95rem;
     }
-    .gold-badge {
-      color: #f7b32b;
-      font-size: 1.1rem;
-    }
-    .purple-badge {
-      color: #c9a0dc;
-      font-size: 1.1rem;
-    }
-    .blue-badge {
-      color: #9aa9c0;
-      font-size: 1rem;
-    }
+    .gold-badge { color: #f7b32b; }
+    .purple-badge { color: #c9a0dc; }
+    .blue-badge { color: #9aa9c0; }
     .rate-box {
       background: #2f2a1f;
-      padding: 0.5rem 1.5rem;
+      padding: 0.5rem 1.3rem;
       border-radius: 3rem;
       font-weight: 600;
-      font-size: 1.1rem;
+      font-size: 1rem;
       color: #ffd966;
       border: 1px solid #b49450;
-      box-shadow: 0 0 12px #00000033;
+    }
+    .advanced-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      background: rgba(0,0,0,0.3);
+      border-radius: 1.5rem;
+      padding: 0.8rem 1.5rem;
+      margin: 1rem 0 1.2rem;
+      justify-content: center;
+      color: #d4c099;
+      font-size: 0.9rem;
     }
     .button-group {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.9rem;
+      gap: 0.8rem;
       justify-content: center;
-      margin: 1.5rem 0 1.8rem;
+      margin: 1.2rem 0 1.5rem;
     }
     .btn {
       background: rgba(30, 30, 40, 0.7);
       backdrop-filter: blur(10px);
       border: 1px solid rgba(220, 180, 100, 0.5);
-      padding: 0.8rem 1.7rem;
+      padding: 0.7rem 1.5rem;
       border-radius: 3rem;
       font-weight: 600;
-      font-size: 1rem;
+      font-size: 0.95rem;
       color: #f5e3c4;
       cursor: pointer;
       transition: all 0.25s;
@@ -155,210 +166,199 @@
       color: #fff3db;
       background: linear-gradient(135deg, #3a3326, #282215);
       transform: translateY(-2px);
-      box-shadow: 0 12px 20px rgba(0,0,0,0.6);
     }
     .btn.primary {
       background: linear-gradient(135deg, #b68b40, #7a5e2f);
       border-color: #eec77e;
       color: #0a0a0a;
       font-weight: 700;
-      text-shadow: 0 1px 2px rgba(255,255,200,0.5);
-    }
-    .btn.primary:hover {
-      background: linear-gradient(135deg, #d4a44c, #8f6f3a);
     }
     .history-log {
       background: #0b0d14cc;
       border-radius: 1.8rem;
-      padding: 1.2rem 1.5rem;
+      padding: 1rem 1.4rem;
       backdrop-filter: blur(16px);
       border: 1px solid #5e5137;
-      max-height: 280px;
+      max-height: 250px;
       overflow-y: auto;
-      font-family: 'JetBrains Mono', 'Fira Code', monospace;
-      font-size: 0.85rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
       color: #cdc2aa;
-      margin-top: 0.5rem;
       box-shadow: inset 0 0 20px #00000050;
     }
     .log-entry {
       display: flex;
       justify-content: space-between;
-      padding: 0.4rem 0.2rem;
+      padding: 0.35rem 0.2rem;
       border-bottom: 1px solid rgba(255, 255, 200, 0.08);
-      align-items: center;
     }
-    .five-star {
-      color: #f7b32b;
-      font-weight: bold;
-      text-shadow: 0 0 8px #ffbb2e;
-    }
-    .four-star {
-      color: #c9a0dc;
-      font-weight: 500;
-    }
-    .three-star {
-      color: #9a9a9a;
-    }
-    .star-icon {
-      margin-right: 0.3rem;
-    }
+    .five-star { color: #f7b32b; font-weight: bold; }
+    .four-star { color: #c9a0dc; }
+    .three-star { color: #9a9a9a; }
+    .limited-tag { color: #ff8c6b; font-size:0.7rem; margin-left:0.3rem;}
+    .standard-tag { color: #a0c0f0; font-size:0.7rem; margin-left:0.3rem;}
     .algorithm-note {
-      margin-top: 1.4rem;
-      font-size: 0.8rem;
+      margin-top: 1rem;
+      font-size: 0.75rem;
       color: #a19782;
       text-align: center;
       border-top: 1px dashed #5b5544;
-      padding-top: 0.9rem;
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      flex-wrap: wrap;
-    }
-    button:disabled {
-      opacity: 0.5;
-      pointer-events: none;
-    }
-    @media (max-width: 500px) {
-      .card {
-        padding: 1.5rem 1rem;
-      }
-      .stats-grid {
-        flex-direction: column;
-        align-items: flex-start;
-      }
+      padding-top: 0.8rem;
     }
   </style>
 </head>
 <body>
   <div class="card">
-    <h1>✨ 米式卡池</h1>
-    <div class="subtitle">概率递增 · 软保底 · 硬保底 · 金紫统计</div>
+    <h1>✨ 米式卡池 · 限定</h1>
+    <div class="subtitle">大小保底 · 限定/常驻 · 实时期望统计</div>
 
-    <!-- 统计面板：保底、概率、金/紫/蓝数量 -->
     <div class="stats-grid">
       <div class="pity-area">
         <div class="pity-item">
           <span class="pity-label">五星保底</span>
           <span class="pity-value" id="pityCounter">0</span>
-          <span style="font-size:0.7rem; color:#ab9f84;">/90</span>
+          <span style="font-size:0.7rem;">/90</span>
         </div>
         <div class="pity-item">
           <span class="pity-label">下一抽概率</span>
           <span class="pity-value" id="currentRate">0.60%</span>
         </div>
+        <div class="pity-item">
+          <span class="pity-label">大保底</span>
+          <span class="pity-value" id="guaranteeStatus" style="font-size:1.2rem;">❌</span>
+        </div>
       </div>
       <div class="count-badges">
-        <div class="badge-item">
-          <span>🟡</span> <span class="gold-badge" id="goldCount">0</span>
-        </div>
-        <div class="badge-item">
-          <span>🟣</span> <span class="purple-badge" id="purpleCount">0</span>
-        </div>
-        <div class="badge-item">
-          <span>🔵</span> <span class="blue-badge" id="blueCount">0</span>
-        </div>
-        <div class="badge-item" style="margin-left:0.3rem;">
-          <span style="color:#ccc;">📦</span> <span style="color:#e6d7b4;" id="totalPullsSmall">0</span>
-        </div>
+        <div class="badge-item"><span>🟡</span><span class="gold-badge" id="goldCount">0</span></div>
+        <div class="badge-item"><span>🟣</span><span class="purple-badge" id="purpleCount">0</span></div>
+        <div class="badge-item"><span>🔵</span><span class="blue-badge" id="blueCount">0</span></div>
+        <div class="badge-item"><span>⭐限定</span><span style="color:#ffb347;" id="limitedCount">0</span></div>
+        <div class="badge-item"><span>📦总</span><span id="totalPullsSmall">0</span></div>
       </div>
     </div>
 
-    <!-- 操作按钮 -->
+    <div class="advanced-stats">
+      <span>🎯 不歪率: <strong id="winRateDisplay">0%</strong></span>
+      <span>⭐ 平均出金抽数: <strong id="avgFiveStarPulls">0</strong></span>
+      <span>🌟 平均限定抽数: <strong id="avgLimitedPulls">0</strong></span>
+    </div>
+
     <div class="button-group">
       <button class="btn" id="pullOneBtn">🔹 单抽</button>
       <button class="btn primary" id="pullTenBtn">🌟 十连抽</button>
-      <button class="btn" id="resetBtn">🔄 重置卡池</button>
+      <button class="btn" id="resetBtn">🔄 重置</button>
     </div>
 
-    <!-- 抽卡记录（含星级与抽数） -->
     <div class="history-log" id="historyContainer">
-      <div style="text-align: center; color: #5b5b5b;">📜 抽卡记录将显示在这里</div>
+      <div style="text-align: center; color: #5b5b5b;">📜 抽卡记录</div>
     </div>
     
     <div class="algorithm-note">
-      <span>⭐ 基础0.6% · 73抽后每抽+6% · 90硬保底</span>
-      <span>🟡 五星 🟣 四星 🔵 三星</span>
+      ⭐ 0.6%基础 · 73软保底 · 90硬保底 · 50%限定/常驻 · 歪后大保底
     </div>
   </div>
 
   <script>
     (function() {
-      // ---------- 米式卡池核心算法配置 ----------
-      const BASE_RATE = 0.006;            // 0.6%
-      const SOFT_PITY_START = 73;        // 第74抽开始提升 (计数73表示已73抽未出)
-      const HARD_PITY = 90;              
-      const RATE_INCREMENT = 0.06;       // 每次+6%
-
-      // 四星概率 (非五星时，约13%为四星，否则三星)
+      // ---------- 配置 ----------
+      const BASE_RATE = 0.006;
+      const SOFT_PITY_START = 73;
+      const HARD_PITY = 90;
+      const RATE_INCREMENT = 0.06;
       const FOUR_STAR_PROB = 0.13;
+      const LIMITED_PROB = 0.5;   // 出金时50%为限定
 
-      // ---------- 状态变量 ----------
-      let pityCounter = 0;               // 距上次五星的抽数
-      let totalPulls = 0;               // 总抽数
-      
-      // 星级统计
+      // ---------- 状态 ----------
+      let pityCounter = 0;           // 距上次五星抽数
+      let totalPulls = 0;
       let countFiveStar = 0;
       let countFourStar = 0;
       let countThreeStar = 0;
+      let countLimited = 0;         // 限定五星数量
       
-      let historyLogs = [];             // 记录数组
+      // 大小保底核心：是否处于大保底状态 (true=下一金必为限定)
+      let isGuaranteedLimited = false;
+      
+      // 统计用变量
+      let fiveStarPullRecords = [];   // 记录每次出金时的抽数(距上次出金)
+      let limitedPullRecords = [];    // 记录每次出限定时累计的抽数(从上次限定开始)
+      let lastLimitedTotalPulls = 0;  // 上一次出限定时的总抽数
+      let winCount = 0;              // 不歪次数 (出金时直接是限定)
+      let loseCount = 0;            // 歪的次数 (出金是常驻)
 
-      // DOM 元素
+      let historyLogs = [];
+
+      // DOM
       const pityCounterEl = document.getElementById('pityCounter');
       const currentRateEl = document.getElementById('currentRate');
+      const guaranteeStatusEl = document.getElementById('guaranteeStatus');
       const goldCountEl = document.getElementById('goldCount');
       const purpleCountEl = document.getElementById('purpleCount');
       const blueCountEl = document.getElementById('blueCount');
+      const limitedCountEl = document.getElementById('limitedCount');
       const totalPullsSmallEl = document.getElementById('totalPullsSmall');
+      const winRateDisplayEl = document.getElementById('winRateDisplay');
+      const avgFiveStarPullsEl = document.getElementById('avgFiveStarPulls');
+      const avgLimitedPullsEl = document.getElementById('avgLimitedPulls');
       const historyContainer = document.getElementById('historyContainer');
-      const pullOneBtn = document.getElementById('pullOneBtn');
-      const pullTenBtn = document.getElementById('pullTenBtn');
-      const resetBtn = document.getElementById('resetBtn');
 
-      // ---------- 工具函数 ----------
-      function formatRate(rate) {
-        return (rate * 100).toFixed(2) + '%';
-      }
-
-      // 获取当前五星概率 (基于pityCounter)
-      function getCurrentFiveStarRate(currentPity) {
-        if (currentPity >= HARD_PITY) {
-          return 1.0;
-        }
-        if (currentPity >= SOFT_PITY_START) {
-          const pullNumber = currentPity + 1; 
-          const increments = pullNumber - SOFT_PITY_START;
-          let adjustedRate = BASE_RATE + increments * RATE_INCREMENT;
-          return Math.min(adjustedRate, 1.0);
+      function formatRate(r) { return (r*100).toFixed(2)+'%'; }
+      
+      function getCurrentFiveStarRate(pity) {
+        if (pity >= HARD_PITY) return 1.0;
+        if (pity >= SOFT_PITY_START) {
+          const pullNum = pity + 1;
+          const inc = pullNum - SOFT_PITY_START;
+          return Math.min(BASE_RATE + inc * RATE_INCREMENT, 1.0);
         }
         return BASE_RATE;
       }
 
-      // 执行一次抽卡，返回详细结果
       function performSinglePull() {
         const pityBefore = pityCounter;
         const fiveStarRate = getCurrentFiveStarRate(pityBefore);
         const rand = Math.random();
         const isFiveStar = rand < fiveStarRate;
+        let stars, isLimited = false, isStandard = false;
 
-        // 确定星级
-        let stars;
         if (isFiveStar) {
           stars = 5;
-          pityCounter = 0;            // 抽出五星重置保底
-        } else {
-          // 非五星：判定四星还是三星
-          const fourStarRand = Math.random();
-          if (fourStarRand < FOUR_STAR_PROB) {
-            stars = 4;
+          // 记录本次出金距上次出金的抽数
+          fiveStarPullRecords.push(pityBefore + 1);
+          
+          // 判定限定/常驻
+          if (isGuaranteedLimited) {
+            // 大保底：必出限定
+            isLimited = true;
+            isGuaranteedLimited = false;
           } else {
-            stars = 3;
+            // 小保底：50%概率限定
+            if (Math.random() < LIMITED_PROB) {
+              isLimited = true;
+            } else {
+              isStandard = true;
+              isGuaranteedLimited = true;  // 歪了，下次大保底
+            }
           }
+
+          if (isLimited) {
+            countLimited++;
+            winCount++;
+            // 记录限定间隔抽数
+            const pullsSinceLastLimited = totalPulls - lastLimitedTotalPulls + 1;
+            limitedPullRecords.push(pullsSinceLastLimited);
+            lastLimitedTotalPulls = totalPulls + 1; // 更新为当前总抽(即将+1)
+          } else if (isStandard) {
+            loseCount++;
+          }
+
+          pityCounter = 0;
+        } else {
+          const fourRand = Math.random();
+          stars = fourRand < FOUR_STAR_PROB ? 4 : 3;
           pityCounter = Math.min(pityCounter + 1, HARD_PITY);
         }
 
-        // 更新统计计数
         if (stars === 5) countFiveStar++;
         else if (stars === 4) countFourStar++;
         else countThreeStar++;
@@ -366,127 +366,123 @@
         totalPulls++;
 
         return {
-          stars: stars,
-          isFiveStar: isFiveStar,
-          rateAtPull: fiveStarRate,
-          pityBeforePull: pityBefore,
+          stars, isFiveStar, isLimited, isStandard,
+          rateAtPull: fiveStarRate, pityBeforePull: pityBefore
         };
       }
 
-      // 生成星级文本与样式类
-      function getStarDisplay(stars) {
-        if (stars === 5) return { text: '★★★★★', class: 'five-star', icon: '🟡' };
-        if (stars === 4) return { text: '★★★★', class: 'four-star', icon: '🟣' };
-        return { text: '★★★', class: 'three-star', icon: '🔵' };
-      }
-
-      // 添加历史记录
-      function addHistoryLog(stars, pityBefore, rateAtPull) {
-        const display = getStarDisplay(stars);
-        const pullNumber = pityBefore + 1;
-        const entryText = `第${pullNumber}抽  ${display.icon} ${display.text}  (概率${formatRate(rateAtPull)})`;
-        
-        historyLogs.unshift({
-          text: entryText,
-          class: display.class,
-          stars: stars,
-        });
-        
-        if (historyLogs.length > 70) {
-          historyLogs.pop();
+      function getStarDisplay(stars, isLimited, isStandard) {
+        if (stars === 5) {
+          if (isLimited) return { text: '★★★★★', class: 'five-star', tag: '限定', tagClass: 'limited-tag' };
+          if (isStandard) return { text: '★★★★★', class: 'five-star', tag: '常驻', tagClass: 'standard-tag' };
+          return { text: '★★★★★', class: 'five-star', tag: '', tagClass: '' };
         }
+        if (stars === 4) return { text: '★★★★', class: 'four-star', tag: '', tagClass: '' };
+        return { text: '★★★', class: 'three-star', tag: '', tagClass: '' };
       }
 
-      // 渲染历史记录
+      function addHistoryLog(stars, pityBefore, rateAtPull, isLimited, isStandard) {
+        const disp = getStarDisplay(stars, isLimited, isStandard);
+        const pullNum = pityBefore + 1;
+        let entry = `第${pullNum}抽 ${disp.text}`;
+        if (disp.tag) entry += ` <span class="${disp.tagClass}">${disp.tag}</span>`;
+        entry += ` (${formatRate(rateAtPull)})`;
+        historyLogs.unshift({ text: entry, class: disp.class });
+        if (historyLogs.length > 60) historyLogs.pop();
+      }
+
       function renderHistory() {
-        if (historyLogs.length === 0) {
-          historyContainer.innerHTML = '<div style="text-align: center; color: #5b5b5b;">📜 抽卡记录将显示在这里</div>';
+        if (!historyLogs.length) {
+          historyContainer.innerHTML = '<div style="text-align:center;color:#5b5b5b;">📜 抽卡记录</div>';
           return;
         }
         let html = '';
-        historyLogs.forEach(log => {
-          html += `<div class="log-entry"><span class="${log.class}">${log.text}</span></div>`;
-        });
+        historyLogs.forEach(l => html += `<div class="log-entry"><span class="${l.class}">${l.text}</span></div>`);
         historyContainer.innerHTML = html;
         historyContainer.scrollTop = 0;
       }
 
-      // 更新所有UI数据
       function updateUI() {
-        // 保底与概率
         pityCounterEl.textContent = pityCounter;
         const nextRate = getCurrentFiveStarRate(pityCounter);
         currentRateEl.textContent = formatRate(nextRate);
+        guaranteeStatusEl.textContent = isGuaranteedLimited ? '✅ 大保底' : '❌ 小保底';
+        guaranteeStatusEl.style.color = isGuaranteedLimited ? '#ff8c6b' : '#a0c0f0';
         
-        // 星级统计
         goldCountEl.textContent = countFiveStar;
         purpleCountEl.textContent = countFourStar;
         blueCountEl.textContent = countThreeStar;
+        limitedCountEl.textContent = countLimited;
         totalPullsSmallEl.textContent = totalPulls;
-        
-        // 保底颜色提醒
-        if (pityCounter >= 80) {
-          pityCounterEl.style.color = '#ff8c6b';
-        } else if (pityCounter >= SOFT_PITY_START) {
-          pityCounterEl.style.color = '#f5b042';
-        } else {
-          pityCounterEl.style.color = '#fadf9e';
-        }
+
+        // 不歪率
+        const totalFiveStars = winCount + loseCount;
+        const winRate = totalFiveStars > 0 ? ((winCount / totalFiveStars) * 100).toFixed(1) : 0;
+        winRateDisplayEl.textContent = winRate + '%';
+
+        // 平均出金抽数
+        const avgFive = fiveStarPullRecords.length > 0 
+          ? (fiveStarPullRecords.reduce((a,b)=>a+b,0) / fiveStarPullRecords.length).toFixed(1) 
+          : '0';
+        avgFiveStarPullsEl.textContent = avgFive;
+
+        // 平均限定抽数
+        const avgLimited = limitedPullRecords.length > 0 
+          ? (limitedPullRecords.reduce((a,b)=>a+b,0) / limitedPullRecords.length).toFixed(1) 
+          : '0';
+        avgLimitedPullsEl.textContent = avgLimited;
+
+        if (pityCounter >= 80) pityCounterEl.style.color = '#ff8c6b';
+        else if (pityCounter >= SOFT_PITY_START) pityCounterEl.style.color = '#f5b042';
+        else pityCounterEl.style.color = '#fadf9e';
       }
 
-      // 单抽处理
       function executeSinglePull() {
-        const result = performSinglePull();
-        addHistoryLog(result.stars, result.pityBeforePull, result.rateAtPull);
+        const res = performSinglePull();
+        addHistoryLog(res.stars, res.pityBeforePull, res.rateAtPull, res.isLimited, res.isStandard);
         updateUI();
         renderHistory();
       }
 
-      // 十连抽处理
       function executeTenPull() {
-        for (let i = 0; i < 10; i++) {
-          const result = performSinglePull();
-          addHistoryLog(result.stars, result.pityBeforePull, result.rateAtPull);
+        for (let i=0; i<10; i++) {
+          const res = performSinglePull();
+          addHistoryLog(res.stars, res.pityBeforePull, res.rateAtPull, res.isLimited, res.isStandard);
         }
         updateUI();
         renderHistory();
       }
 
-      // 重置所有状态
-      function resetGacha() {
+      function resetAll() {
         pityCounter = 0;
         totalPulls = 0;
         countFiveStar = 0;
         countFourStar = 0;
         countThreeStar = 0;
+        countLimited = 0;
+        isGuaranteedLimited = false;
+        fiveStarPullRecords = [];
+        limitedPullRecords = [];
+        lastLimitedTotalPulls = 0;
+        winCount = 0;
+        loseCount = 0;
         historyLogs = [];
         updateUI();
         renderHistory();
       }
 
-      // ---------- 事件绑定 ----------
-      pullOneBtn.addEventListener('click', executeSinglePull);
-      pullTenBtn.addEventListener('click', executeTenPull);
-      resetBtn.addEventListener('click', resetGacha);
+      document.getElementById('pullOneBtn').addEventListener('click', executeSinglePull);
+      document.getElementById('pullTenBtn').addEventListener('click', executeTenPull);
+      document.getElementById('resetBtn').addEventListener('click', resetAll);
 
-      // 键盘快捷键
       window.addEventListener('keydown', (e) => {
-        if (e.key === '1' || e.key === '!') {
-          e.preventDefault();
-          executeSinglePull();
-        } else if (e.key === '0' || e.key === ')') {
-          e.preventDefault();
-          executeTenPull();
-        } else if (e.key === 'r' || e.key === 'R') {
-          e.preventDefault();
-          resetGacha();
-        }
+        if (e.key === '1') { e.preventDefault(); executeSinglePull(); }
+        else if (e.key === '0') { e.preventDefault(); executeTenPull(); }
+        else if (e.key === 'r' || e.key === 'R') { e.preventDefault(); resetAll(); }
       });
 
-      // 初始化
       updateUI();
       renderHistory();
-      console.log('🎰 米式卡池模拟器 (含金/紫统计) 已启动');
     })();
   </script>
 </body>
