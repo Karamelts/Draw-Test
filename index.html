@@ -129,7 +129,6 @@
       border-bottom: 1px dashed rgba(255, 215, 150, 0.35);
       padding-bottom: 0.7rem;
     }
-
     .pity-row {
       background: rgba(10, 12, 20, 0.55);
       border-radius: 2rem;
@@ -160,7 +159,6 @@
       line-height: 1.2;
       text-align: center;
     }
-
     .badge-row {
       background: rgba(10, 12, 20, 0.55);
       border-radius: 2rem;
@@ -181,9 +179,7 @@
       min-width: 70px;
       justify-content: center;
     }
-    .badge-item .emoji {
-      font-size: 1.2rem;
-    }
+    .badge-item .emoji { font-size: 1.2rem; }
     .badge-item .count {
       min-width: 35px;
       text-align: center;
@@ -192,7 +188,6 @@
     .gold-badge { color: #f7b32b; }
     .purple-badge { color: #c9a0dc; }
     .blue-badge { color: #9aa9c0; }
-
     .advanced-stats {
       display: flex;
       flex-wrap: wrap;
@@ -210,7 +205,6 @@
       display: inline-block;
       text-align: right;
     }
-
     .button-group {
       display: flex;
       flex-wrap: wrap;
@@ -247,7 +241,6 @@
       color: #0a0a0a;
       font-weight: 700;
     }
-
     .history-log {
       background: #0b0d14cc;
       border-radius: 1.8rem;
@@ -272,7 +265,6 @@
     .three-star { color: #9a9a9a; }
     .limited-tag { color: #ff8c6b; font-size:0.7rem; margin-left:0.3rem; }
     .standard-tag { color: #a0c0f0; font-size:0.7rem; margin-left:0.3rem; }
-
     .algorithm-note {
       margin-top: 1rem;
       font-size: 0.75rem;
@@ -281,15 +273,9 @@
       border-top: 1px dashed #5b5544;
       padding-top: 0.8rem;
     }
-
     @media (max-width: 850px) {
-      .main-layout {
-        flex-direction: column;
-      }
-      .milestone-panel {
-        width: 100%;
-        position: static;
-      }
+      .main-layout { flex-direction: column; }
+      .milestone-panel { width: 100%; position: static; }
     }
     @media (max-width: 500px) {
       .pity-row { gap: 1.2rem; }
@@ -299,11 +285,9 @@
 </head>
 <body>
   <div class="main-layout">
-    <!-- 左侧主卡片 -->
     <div class="card">
       <h1>✨ 米式卡池 · 限定</h1>
       <div class="subtitle">大小保底 · 限定/常驻 · 实时期望统计</div>
-
       <div class="pity-row">
         <div class="pity-item">
           <span class="pity-label">五星保底</span>
@@ -319,52 +303,31 @@
           <span class="pity-value" id="guaranteeStatus" style="font-size:1.3rem;">小保底</span>
         </div>
       </div>
-
       <div class="badge-row">
-        <div class="badge-item">
-          <span class="emoji">🟡</span>
-          <span class="count gold-badge" id="goldCount">0</span>
-        </div>
-        <div class="badge-item">
-          <span class="emoji">🟣</span>
-          <span class="count purple-badge" id="purpleCount">0</span>
-        </div>
-        <div class="badge-item">
-          <span class="emoji">🔵</span>
-          <span class="count blue-badge" id="blueCount">0</span>
-        </div>
-        <div class="badge-item">
-          <span class="emoji">⭐</span>
-          <span class="count" style="color:#ffb347;" id="limitedCount">0</span>
-        </div>
-        <div class="badge-item">
-          <span class="emoji">📦</span>
-          <span class="count" style="color:#e6d7b4;" id="totalPullsSmall">0</span>
-        </div>
+        <div class="badge-item"><span class="emoji">🟡</span><span class="count gold-badge" id="goldCount">0</span></div>
+        <div class="badge-item"><span class="emoji">🟣</span><span class="count purple-badge" id="purpleCount">0</span></div>
+        <div class="badge-item"><span class="emoji">🔵</span><span class="count blue-badge" id="blueCount">0</span></div>
+        <div class="badge-item"><span class="emoji">⭐</span><span class="count" style="color:#ffb347;" id="limitedCount">0</span></div>
+        <div class="badge-item"><span class="emoji">📦</span><span class="count" style="color:#e6d7b4;" id="totalPullsSmall">0</span></div>
       </div>
-
       <div class="advanced-stats">
         <span>🎯 不歪率: <strong id="winRateDisplay">0%</strong></span>
         <span>⭐ 平均出金抽数: <strong id="avgFiveStarPulls">0</strong></span>
         <span>🌟 平均限定抽数: <strong id="avgLimitedPulls">0</strong></span>
       </div>
-
       <div class="button-group">
         <button class="btn" id="pullOneBtn">🔹 单抽</button>
         <button class="btn primary" id="pullTenBtn">🌟 十连抽</button>
         <button class="btn" id="resetBtn">🔄 重置</button>
       </div>
-
       <div class="history-log" id="historyContainer">
         <div style="text-align: center; color: #5b5b5b;">📜 抽卡记录</div>
       </div>
-      
       <div class="algorithm-note">
         ⭐ 0.6%基础 · 73软保底 · 90硬保底 · 50%限定/常驻 · 歪后大保底
       </div>
     </div>
 
-    <!-- 右侧：每轮记录面板 -->
     <div class="milestone-panel" id="milestonePanel">
       <div class="milestone-title">📋 每轮限定记录</div>
       <div class="milestone-list" id="milestoneList">
@@ -385,7 +348,6 @@
       const FOUR_STAR_PROB = 0.13;
       const LIMITED_PROB = 0.5;
 
-      // 主状态
       let pityCounter = 0;
       let totalPulls = 0;
       let countFiveStar = 0;
@@ -393,7 +355,6 @@
       let countThreeStar = 0;
       let countLimited = 0;
       let isGuaranteedLimited = false;
-      
       let fiveStarPullRecords = [];
       let limitedPullRecords = [];
       let lastLimitedTotalPulls = 0;
@@ -401,12 +362,10 @@
       let loseCount = 0;
       let historyLogs = [];
 
-      // 每轮追踪
-      let roundLimitedCount = 0;      // 当前轮累计限定数
-      let roundStartPulls = 0;        // 当前轮开始时的总抽数
-      let roundRecords = [];          // [{ limitedCount, pullsUsed, isBackstab }]
+      // 每轮追踪：记录本轮内每次出限定时的总抽数
+      let roundLimitedPullPositions = [];  // 本轮内每次出限定的 totalPulls
+      let roundRecords = [];
 
-      // DOM
       const pityCounterEl = document.getElementById('pityCounter');
       const currentRateEl = document.getElementById('currentRate');
       const guaranteeStatusEl = document.getElementById('guaranteeStatus');
@@ -434,22 +393,85 @@
         return BASE_RATE;
       }
 
+      function performSinglePull() {
+        const pityBefore = pityCounter;
+        const fiveStarRate = getCurrentFiveStarRate(pityBefore);
+        const isFiveStar = Math.random() < fiveStarRate;
+        let stars, isLimited = false, isStandard = false;
+
+        if (isFiveStar) {
+          stars = 5;
+          fiveStarPullRecords.push(pityBefore + 1);
+          if (isGuaranteedLimited) {
+            isLimited = true;
+            isGuaranteedLimited = false;
+          } else {
+            if (Math.random() < LIMITED_PROB) {
+              isLimited = true;
+            } else {
+              isStandard = true;
+              isGuaranteedLimited = true;
+            }
+          }
+          if (isLimited) {
+            countLimited++;
+            winCount++;
+            roundLimitedPullPositions.push(totalPulls + 1); // 记录本次出限定时对应的抽数(第几抽)
+            const pullsSinceLastLimited = totalPulls - lastLimitedTotalPulls + 1;
+            limitedPullRecords.push(pullsSinceLastLimited);
+            lastLimitedTotalPulls = totalPulls + 1;
+          } else if (isStandard) {
+            loseCount++;
+          }
+          pityCounter = 0;
+        } else {
+          stars = Math.random() < FOUR_STAR_PROB ? 4 : 3;
+          pityCounter = Math.min(pityCounter + 1, HARD_PITY);
+        }
+
+        if (stars === 5) countFiveStar++;
+        else if (stars === 4) countFourStar++;
+        else countThreeStar++;
+        totalPulls++;
+        return { stars, isFiveStar, isLimited, isStandard, rateAtPull: fiveStarRate, pityBeforePull: pityBefore };
+      }
+
       function checkRoundComplete() {
-        // 检查当前轮是否达到或超过7限定
-        if (roundLimitedCount >= 7) {
-          const pullsUsed = totalPulls - roundStartPulls;
-          const isBackstab = roundLimitedCount > 7;
+        if (roundLimitedPullPositions.length >= 7) {
+          // 本轮达成7+限定
+          const roundStartPull = roundRecords.length === 0 ? 0 : (() => {
+            // 上一轮结束时的总抽数 = 上一轮最后一个限定的抽数
+            let sum = 0;
+            for (let i = 0; i < roundRecords.length; i++) {
+              sum += roundRecords[i].pullsUsed;
+            }
+            return sum;
+          })();
           
+          // 本轮实际限定数
+          const limitedInRound = roundLimitedPullPositions.length;
+          // 本轮消耗抽数 = 本轮最后一个限定抽数 - 本轮开始前总抽数
+          const lastLimitedPull = roundLimitedPullPositions[roundLimitedPullPositions.length - 1];
+          const pullsUsed = lastLimitedPull - roundStartPull;
+          const isBackstab = limitedInRound > 7;
+
           roundRecords.push({
-            limitedCount: roundLimitedCount,
+            limitedCount: limitedInRound,
             pullsUsed: pullsUsed,
             isBackstab: isBackstab
           });
-          
-          // 重置新一轮
-          roundLimitedCount = 0;
-          roundStartPulls = totalPulls;
-          
+
+          // 新一轮：保留多余的限定到下一轮
+          const overflow = limitedInRound - 7;
+          if (overflow > 0) {
+            // 背刺情况：本轮满7后还有多余限定，这些多余的不应该丢失
+            // 但按你的规则，本轮已经记录为 limitedInRound 限定，下一轮应该从0开始
+            // 因为已经结算了本轮（包含背刺的额外限定），下一轮重新计数
+            roundLimitedPullPositions = [];
+          } else {
+            roundLimitedPullPositions = [];
+          }
+
           renderRoundRecords();
           updateCurrentRoundInfo();
         }
@@ -477,61 +499,15 @@
       }
 
       function updateCurrentRoundInfo() {
-        const pullsSoFar = totalPulls - roundStartPulls;
-        currentRoundInfoEl.textContent = `当前轮: ${roundLimitedCount}限定 / ${pullsSoFar}抽`;
-      }
-
-      function performSinglePull() {
-        const pityBefore = pityCounter;
-        const fiveStarRate = getCurrentFiveStarRate(pityBefore);
-        const rand = Math.random();
-        const isFiveStar = rand < fiveStarRate;
-        let stars, isLimited = false, isStandard = false;
-
-        if (isFiveStar) {
-          stars = 5;
-          fiveStarPullRecords.push(pityBefore + 1);
-          
-          if (isGuaranteedLimited) {
-            isLimited = true;
-            isGuaranteedLimited = false;
-          } else {
-            if (Math.random() < LIMITED_PROB) {
-              isLimited = true;
-            } else {
-              isStandard = true;
-              isGuaranteedLimited = true;
-            }
+        const roundStartPull = roundRecords.length === 0 ? 0 : (() => {
+          let sum = 0;
+          for (let i = 0; i < roundRecords.length; i++) {
+            sum += roundRecords[i].pullsUsed;
           }
-
-          if (isLimited) {
-            countLimited++;
-            winCount++;
-            roundLimitedCount++;
-            const pullsSinceLastLimited = totalPulls - lastLimitedTotalPulls + 1;
-            limitedPullRecords.push(pullsSinceLastLimited);
-            lastLimitedTotalPulls = totalPulls + 1;
-          } else if (isStandard) {
-            loseCount++;
-          }
-
-          pityCounter = 0;
-        } else {
-          const fourRand = Math.random();
-          stars = fourRand < FOUR_STAR_PROB ? 4 : 3;
-          pityCounter = Math.min(pityCounter + 1, HARD_PITY);
-        }
-
-        if (stars === 5) countFiveStar++;
-        else if (stars === 4) countFourStar++;
-        else countThreeStar++;
-        
-        totalPulls++;
-
-        return {
-          stars, isFiveStar, isLimited, isStandard,
-          rateAtPull: fiveStarRate, pityBeforePull: pityBefore
-        };
+          return sum;
+        })();
+        const pullsSoFar = totalPulls - roundStartPull;
+        currentRoundInfoEl.textContent = `当前轮: ${roundLimitedPullPositions.length}限定 / ${pullsSoFar}抽`;
       }
 
       function getStarDisplay(stars, isLimited, isStandard) {
@@ -567,37 +543,18 @@
 
       function updateUI() {
         pityCounterEl.textContent = pityCounter;
-        const nextRate = getCurrentFiveStarRate(pityCounter);
-        currentRateEl.textContent = formatRate(nextRate);
-        
-        if (isGuaranteedLimited) {
-          guaranteeStatusEl.textContent = '大保底';
-          guaranteeStatusEl.style.color = '#ff8c6b';
-        } else {
-          guaranteeStatusEl.textContent = '小保底';
-          guaranteeStatusEl.style.color = '#a0c0f0';
-        }
-        
+        currentRateEl.textContent = formatRate(getCurrentFiveStarRate(pityCounter));
+        guaranteeStatusEl.textContent = isGuaranteedLimited ? '大保底' : '小保底';
+        guaranteeStatusEl.style.color = isGuaranteedLimited ? '#ff8c6b' : '#a0c0f0';
         goldCountEl.textContent = countFiveStar;
         purpleCountEl.textContent = countFourStar;
         blueCountEl.textContent = countThreeStar;
         limitedCountEl.textContent = countLimited;
         totalPullsSmallEl.textContent = totalPulls;
-
-        const totalFiveStars = winCount + loseCount;
-        const winRate = totalFiveStars > 0 ? ((winCount / totalFiveStars) * 100).toFixed(1) : 0;
-        winRateDisplayEl.textContent = winRate + '%';
-
-        const avgFive = fiveStarPullRecords.length > 0 
-          ? (fiveStarPullRecords.reduce((a,b)=>a+b,0) / fiveStarPullRecords.length).toFixed(1) 
-          : '0';
-        avgFiveStarPullsEl.textContent = avgFive;
-
-        const avgLimited = limitedPullRecords.length > 0 
-          ? (limitedPullRecords.reduce((a,b)=>a+b,0) / limitedPullRecords.length).toFixed(1) 
-          : '0';
-        avgLimitedPullsEl.textContent = avgLimited;
-
+        const tf = winCount + loseCount;
+        winRateDisplayEl.textContent = tf > 0 ? ((winCount / tf) * 100).toFixed(1) + '%' : '0%';
+        avgFiveStarPullsEl.textContent = fiveStarPullRecords.length > 0 ? (fiveStarPullRecords.reduce((a,b)=>a+b,0) / fiveStarPullRecords.length).toFixed(1) : '0';
+        avgLimitedPullsEl.textContent = limitedPullRecords.length > 0 ? (limitedPullRecords.reduce((a,b)=>a+b,0) / limitedPullRecords.length).toFixed(1) : '0';
         if (pityCounter >= 80) pityCounterEl.style.color = '#ff8c6b';
         else if (pityCounter >= SOFT_PITY_START) pityCounterEl.style.color = '#f5b042';
         else pityCounterEl.style.color = '#fadf9e';
@@ -637,8 +594,7 @@
         winCount = 0;
         loseCount = 0;
         historyLogs = [];
-        roundLimitedCount = 0;
-        roundStartPulls = 0;
+        roundLimitedPullPositions = [];
         roundRecords = [];
         updateUI();
         renderHistory();
@@ -649,7 +605,6 @@
       document.getElementById('pullOneBtn').addEventListener('click', executeSinglePull);
       document.getElementById('pullTenBtn').addEventListener('click', executeTenPull);
       document.getElementById('resetBtn').addEventListener('click', resetAll);
-
       window.addEventListener('keydown', (e) => {
         if (e.key === '1') { e.preventDefault(); executeSinglePull(); }
         else if (e.key === '0') { e.preventDefault(); executeTenPull(); }
