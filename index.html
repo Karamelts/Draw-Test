@@ -16,13 +16,19 @@
       min-height: 100vh;
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: flex-start;
       padding: 1.5rem;
       margin: 0;
     }
-    .card {
-      max-width: 780px;
+    .main-layout {
+      display: flex;
+      gap: 1.2rem;
+      max-width: 1050px;
       width: 100%;
+      align-items: flex-start;
+    }
+    .card {
+      flex: 1;
       background: rgba(255, 255, 255, 0.07);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
@@ -32,6 +38,62 @@
       padding: 1.8rem 2rem 2.2rem;
       color: #f0e9e1;
     }
+    /* 右侧里程碑面板 */
+    .milestone-panel {
+      width: 240px;
+      flex-shrink: 0;
+      background: rgba(10, 12, 20, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 2rem;
+      box-shadow: 0 35px 55px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 215, 140, 0.25);
+      padding: 1.4rem 1.2rem;
+      color: #f0e9e1;
+      position: sticky;
+      top: 1.5rem;
+    }
+    .milestone-title {
+      text-align: center;
+      font-weight: 600;
+      font-size: 1rem;
+      color: #ffd966;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid rgba(255,215,150,0.3);
+      padding-bottom: 0.6rem;
+      letter-spacing: 0.05rem;
+    }
+    .milestone-list {
+      max-height: 500px;
+      overflow-y: auto;
+      font-size: 0.8rem;
+    }
+    .milestone-item {
+      background: rgba(255,255,255,0.05);
+      border-radius: 0.8rem;
+      padding: 0.5rem 0.7rem;
+      margin-bottom: 0.4rem;
+      border-left: 3px solid #f7b32b;
+      display: flex;
+      justify-content: space-between;
+    }
+    .milestone-item.backstab {
+      border-left-color: #ff6b6b;
+    }
+    .milestone-count {
+      color: #f7b32b;
+      font-weight: 700;
+    }
+    .milestone-pulls {
+      color: #e6d7b4;
+    }
+    .milestone-empty {
+      text-align: center;
+      color: #5b5b5b;
+      font-size: 0.75rem;
+      padding: 1rem 0;
+    }
+
     h1 {
       font-weight: 500;
       font-size: 2.2rem;
@@ -53,7 +115,6 @@
       padding-bottom: 0.7rem;
     }
 
-    /* ===== 第一排：保底信息 ===== */
     .pity-row {
       background: rgba(10, 12, 20, 0.55);
       border-radius: 2rem;
@@ -85,7 +146,6 @@
       text-align: center;
     }
 
-    /* ===== 第二排：统计徽章 ===== */
     .badge-row {
       background: rgba(10, 12, 20, 0.55);
       border-radius: 2rem;
@@ -118,7 +178,6 @@
     .purple-badge { color: #c9a0dc; }
     .blue-badge { color: #9aa9c0; }
 
-    /* 高级统计 */
     .advanced-stats {
       display: flex;
       flex-wrap: wrap;
@@ -137,7 +196,6 @@
       text-align: right;
     }
 
-    /* 按钮 */
     .button-group {
       display: flex;
       flex-wrap: wrap;
@@ -175,7 +233,6 @@
       font-weight: 700;
     }
 
-    /* 历史记录 */
     .history-log {
       background: #0b0d14cc;
       border-radius: 1.8rem;
@@ -198,8 +255,8 @@
     .five-star { color: #f7b32b; font-weight: bold; }
     .four-star { color: #c9a0dc; }
     .three-star { color: #9a9a9a; }
-    .limited-tag { color: #ff8c6b; font-size:0.7rem; margin-left:0.3rem;}
-    .standard-tag { color: #a0c0f0; font-size:0.7rem; margin-left:0.3rem;}
+    .limited-tag { color: #ff8c6b; font-size:0.7rem; margin-left:0.3rem; }
+    .standard-tag { color: #a0c0f0; font-size:0.7rem; margin-left:0.3rem; }
 
     .algorithm-note {
       margin-top: 1rem;
@@ -210,6 +267,15 @@
       padding-top: 0.8rem;
     }
 
+    @media (max-width: 850px) {
+      .main-layout {
+        flex-direction: column;
+      }
+      .milestone-panel {
+        width: 100%;
+        position: static;
+      }
+    }
     @media (max-width: 500px) {
       .pity-row { gap: 1.2rem; }
       .badge-row { gap: 1rem; flex-wrap: wrap; }
@@ -217,72 +283,78 @@
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>✨ 米式卡池 · 限定</h1>
-    <div class="subtitle">大小保底 · 限定/常驻 · 实时期望统计</div>
+  <div class="main-layout">
+    <!-- 左侧主卡片 -->
+    <div class="card">
+      <h1>✨ 米式卡池 · 限定</h1>
+      <div class="subtitle">大小保底 · 限定/常驻 · 实时期望统计</div>
 
-    <!-- 第一排：保底信息 -->
-    <div class="pity-row">
-      <div class="pity-item">
-        <span class="pity-label">五星保底</span>
-        <span class="pity-value" id="pityCounter">0</span>
-        <span style="font-size:0.7rem; color:#ab9f84;">/90</span>
+      <div class="pity-row">
+        <div class="pity-item">
+          <span class="pity-label">五星保底</span>
+          <span class="pity-value" id="pityCounter">0</span>
+          <span style="font-size:0.7rem; color:#ab9f84;">/90</span>
+        </div>
+        <div class="pity-item">
+          <span class="pity-label">下一抽概率</span>
+          <span class="pity-value" id="currentRate">0.60%</span>
+        </div>
+        <div class="pity-item">
+          <span class="pity-label">保底状态</span>
+          <span class="pity-value" id="guaranteeStatus" style="font-size:1.3rem;">小保底</span>
+        </div>
       </div>
-      <div class="pity-item">
-        <span class="pity-label">下一抽概率</span>
-        <span class="pity-value" id="currentRate">0.60%</span>
+
+      <div class="badge-row">
+        <div class="badge-item">
+          <span class="emoji">🟡</span>
+          <span class="count gold-badge" id="goldCount">0</span>
+        </div>
+        <div class="badge-item">
+          <span class="emoji">🟣</span>
+          <span class="count purple-badge" id="purpleCount">0</span>
+        </div>
+        <div class="badge-item">
+          <span class="emoji">🔵</span>
+          <span class="count blue-badge" id="blueCount">0</span>
+        </div>
+        <div class="badge-item">
+          <span class="emoji">⭐</span>
+          <span class="count" style="color:#ffb347;" id="limitedCount">0</span>
+        </div>
+        <div class="badge-item">
+          <span class="emoji">📦</span>
+          <span class="count" style="color:#e6d7b4;" id="totalPullsSmall">0</span>
+        </div>
       </div>
-      <div class="pity-item">
-        <span class="pity-label">保底状态</span>
-        <span class="pity-value" id="guaranteeStatus" style="font-size:1.3rem;">小保底</span>
+
+      <div class="advanced-stats">
+        <span>🎯 不歪率: <strong id="winRateDisplay">0%</strong></span>
+        <span>⭐ 平均出金抽数: <strong id="avgFiveStarPulls">0</strong></span>
+        <span>🌟 平均限定抽数: <strong id="avgLimitedPulls">0</strong></span>
+      </div>
+
+      <div class="button-group">
+        <button class="btn" id="pullOneBtn">🔹 单抽</button>
+        <button class="btn primary" id="pullTenBtn">🌟 十连抽</button>
+        <button class="btn" id="resetBtn">🔄 重置</button>
+      </div>
+
+      <div class="history-log" id="historyContainer">
+        <div style="text-align: center; color: #5b5b5b;">📜 抽卡记录</div>
+      </div>
+      
+      <div class="algorithm-note">
+        ⭐ 0.6%基础 · 73软保底 · 90硬保底 · 50%限定/常驻 · 歪后大保底
       </div>
     </div>
 
-    <!-- 第二排：统计徽章 -->
-    <div class="badge-row">
-      <div class="badge-item">
-        <span class="emoji">🟡</span>
-        <span class="count gold-badge" id="goldCount">0</span>
+    <!-- 右侧：7限定里程碑面板 -->
+    <div class="milestone-panel" id="milestonePanel">
+      <div class="milestone-title">🎯 限定里程碑</div>
+      <div class="milestone-list" id="milestoneList">
+        <div class="milestone-empty">尚未达成7限定</div>
       </div>
-      <div class="badge-item">
-        <span class="emoji">🟣</span>
-        <span class="count purple-badge" id="purpleCount">0</span>
-      </div>
-      <div class="badge-item">
-        <span class="emoji">🔵</span>
-        <span class="count blue-badge" id="blueCount">0</span>
-      </div>
-      <div class="badge-item">
-        <span class="emoji">⭐</span>
-        <span class="count" style="color:#ffb347;" id="limitedCount">0</span>
-      </div>
-      <div class="badge-item">
-        <span class="emoji">📦</span>
-        <span class="count" style="color:#e6d7b4;" id="totalPullsSmall">0</span>
-      </div>
-    </div>
-
-    <!-- 期望统计 -->
-    <div class="advanced-stats">
-      <span>🎯 不歪率: <strong id="winRateDisplay">0%</strong></span>
-      <span>⭐ 平均出金抽数: <strong id="avgFiveStarPulls">0</strong></span>
-      <span>🌟 平均限定抽数: <strong id="avgLimitedPulls">0</strong></span>
-    </div>
-
-    <!-- 按钮 -->
-    <div class="button-group">
-      <button class="btn" id="pullOneBtn">🔹 单抽</button>
-      <button class="btn primary" id="pullTenBtn">🌟 十连抽</button>
-      <button class="btn" id="resetBtn">🔄 重置</button>
-    </div>
-
-    <!-- 历史记录 -->
-    <div class="history-log" id="historyContainer">
-      <div style="text-align: center; color: #5b5b5b;">📜 抽卡记录</div>
-    </div>
-    
-    <div class="algorithm-note">
-      ⭐ 0.6%基础 · 73软保底 · 90硬保底 · 50%限定/常驻 · 歪后大保底
     </div>
   </div>
 
@@ -295,6 +367,7 @@
       const FOUR_STAR_PROB = 0.13;
       const LIMITED_PROB = 0.5;
 
+      // 主状态
       let pityCounter = 0;
       let totalPulls = 0;
       let countFiveStar = 0;
@@ -310,6 +383,11 @@
       let loseCount = 0;
       let historyLogs = [];
 
+      // 里程碑追踪
+      let lastMilestoneLimitedCount = 0;  // 上次记录时的限定总数
+      let milestoneRecords = [];           // [{ limitedCount, totalPulls, isBackstab }]
+
+      // DOM - 主面板
       const pityCounterEl = document.getElementById('pityCounter');
       const currentRateEl = document.getElementById('currentRate');
       const guaranteeStatusEl = document.getElementById('guaranteeStatus');
@@ -322,6 +400,7 @@
       const avgFiveStarPullsEl = document.getElementById('avgFiveStarPulls');
       const avgLimitedPullsEl = document.getElementById('avgLimitedPulls');
       const historyContainer = document.getElementById('historyContainer');
+      const milestoneListEl = document.getElementById('milestoneList');
 
       function formatRate(r) { return (r*100).toFixed(2)+'%'; }
       
@@ -333,6 +412,58 @@
           return Math.min(BASE_RATE + inc * RATE_INCREMENT, 1.0);
         }
         return BASE_RATE;
+      }
+
+      function checkMilestone() {
+        // 检查是否跨越了7的倍数
+        const prevMilestone = lastMilestoneLimitedCount;
+        const currentMilestone = countLimited;
+        
+        // 找出所有跨过的7的倍数
+        for (let m = prevMilestone + 1; m <= currentMilestone; m++) {
+          if (m % 7 === 0) {
+            // 达成 m 限定里程碑
+            const isBackstab = m > (Math.floor(prevMilestone / 7) + 1) * 7;
+            // 如果是背刺：说明一次操作跨过了多个7的倍数
+            // 例如 prevMilestone=6, m=14 (跨越7), m=14时 isBackstab=true for 14
+            // 更简单的判断：m !== prevMilestone + 1 且 m % 7 === 0 且 prevMilestone%7 !== 6
+            // 实际上：如果prevMilestone=6，达成7是正常，达成14是背刺
+            let backstab = false;
+            const expectedNext = (Math.floor(prevMilestone / 7) + 1) * 7;
+            if (m > expectedNext) {
+              backstab = true;
+            }
+            
+            milestoneRecords.push({
+              limitedCount: m,
+              totalPulls: totalPulls,
+              isBackstab: backstab
+            });
+          }
+        }
+        
+        lastMilestoneLimitedCount = currentMilestone;
+        renderMilestones();
+      }
+
+      function renderMilestones() {
+        if (milestoneRecords.length === 0) {
+          milestoneListEl.innerHTML = '<div class="milestone-empty">尚未达成7限定</div>';
+          return;
+        }
+        let html = '';
+        milestoneRecords.forEach(rec => {
+          const backstabClass = rec.isBackstab ? ' backstab' : '';
+          const marker = rec.isBackstab ? '⚡' : '🎯';
+          html += `
+            <div class="milestone-item${backstabClass}">
+              <span class="milestone-count">${marker} ${rec.limitedCount}限定</span>
+              <span class="milestone-pulls">${rec.totalPulls}抽</span>
+            </div>
+          `;
+        });
+        milestoneListEl.innerHTML = html;
+        milestoneListEl.scrollTop = milestoneListEl.scrollHeight;
       }
 
       function performSinglePull() {
@@ -459,15 +590,17 @@
       function executeSinglePull() {
         const res = performSinglePull();
         addHistoryLog(res.stars, res.pityBeforePull, res.rateAtPull, res.isLimited, res.isStandard);
+        checkMilestone();
         updateUI();
         renderHistory();
       }
 
       function executeTenPull() {
-        for (let i=0; i<10; i++) {
+        for (let i = 0; i < 10; i++) {
           const res = performSinglePull();
           addHistoryLog(res.stars, res.pityBeforePull, res.rateAtPull, res.isLimited, res.isStandard);
         }
+        checkMilestone();
         updateUI();
         renderHistory();
       }
@@ -486,8 +619,11 @@
         winCount = 0;
         loseCount = 0;
         historyLogs = [];
+        lastMilestoneLimitedCount = 0;
+        milestoneRecords = [];
         updateUI();
         renderHistory();
+        renderMilestones();
       }
 
       document.getElementById('pullOneBtn').addEventListener('click', executeSinglePull);
@@ -502,6 +638,7 @@
 
       updateUI();
       renderHistory();
+      renderMilestones();
     })();
   </script>
 </body>
